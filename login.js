@@ -16,12 +16,13 @@ app.use(bodyParser.json());
 
 app.get('/', function(request, response) {
 	var isCaptcha = true;
-	//const headers = response.getHeaders(); 
-	//console.log(JSON.stringify(headers));
-	//response.set("isCaptcha","true");
-	//var test = response.get('content-type');
-	console.log(request.headers);
-	const writeFileResult = fs.appendFileSync('/var/log/app.log', request.headers);
+	var requireCaptcha = request.headers['captcharequire'];
+
+	// Check the header if captcha is required
+	if (requireCaptcha == 'no') {
+		isCaptcha = false;
+	} 
+	
 	if (isCaptcha) {
 		response.sendFile(path.join(__dirname + '/login_captcha.html'));
 	} else {
